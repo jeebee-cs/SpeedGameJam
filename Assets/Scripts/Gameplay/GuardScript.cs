@@ -3,11 +3,20 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 
 public class GuardScript : MonoBehaviour
 {
 
     [SerializeField] private int _rotationSpeed, _degreeRange;
+
+    [SerializeField] private Light2D _vision;
+    public Light2D Vision
+    {
+        get { return _vision; }
+        set { _vision = value; }
+    }
+
 
     [SerializeField] private float _laserLength;
     public float LaserLength
@@ -25,8 +34,7 @@ public class GuardScript : MonoBehaviour
     protected virtual void Start()
     {
         this._startRotationValue = this.transform.rotation.eulerAngles.z;
-
-        this.ScaleLightCone();
+        this._laserLength = this._vision.pointLightOuterRadius;
     }
 
     protected void ScaleLightCone()
@@ -61,9 +69,20 @@ public class GuardScript : MonoBehaviour
 
     private void Detect()
     {
-        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, this.transform.right, this._laserLength);
+        Vector3[] directions = new Vector3[] { new Vector3(1, 0.15f, 0).normalized, new Vector3(1, 0, 0), new Vector3(1, -0.15f, 0).normalized };
 
-        //If the collider of the object hit is not NUll
+        for (int i = 0; i < directions.Length; i++)
+        {
+            this.CastRayInAngleDirection(directions[i]);
+        }
+    }
+
+    private void CastRayInAngleDirection(Vector3 direction)
+    {
+        direction = transform.rotation * direction;
+
+        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, direction, this._laserLength);
+
         if (hit.collider != null)
         {
             if (hit.collider.tag == "Player")
@@ -72,9 +91,9 @@ public class GuardScript : MonoBehaviour
             }
         }
 
-        //Method to draw the ray in scene for debug purpose
-        Debug.DrawRay(transform.position, this.transform.right * this._laserLength, Color.red);
+        Debug.DrawRay(transform.position, direction * this._laserLength, Color.red);
     }
+
     #endregion
 
 }

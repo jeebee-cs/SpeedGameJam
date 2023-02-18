@@ -4,20 +4,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class SleepingGuard : GuardScript
 {
     [SerializeField] private bool _sleeping;
-
     [SerializeField] private float _sleepingIntervallTime;
+
     private float _sleepingCycleStart;
 
-    private float _targetLaserLength;
+    private float _targetVisionIntensity, _targetVisionRadius;
 
     private SpriteChanger _spriteChanger;
 
     protected override void Start()
     {
-        this._targetLaserLength = base.LaserLength;
+        this._targetVisionIntensity = base.Vision.intensity;
+        this._targetVisionRadius = base.Vision.pointLightOuterRadius;
         base.LaserLength = 0f;
 
         this._sleepingCycleStart = Time.time; // is that correct? How is the sleeping cycle gonna change when time is slower/faster?
@@ -38,41 +40,34 @@ public class SleepingGuard : GuardScript
 
         if (this._sleeping)
         {
+            base.Vision.intensity = 0;
             this._spriteChanger.IncreaseSize();
             base.LaserLength = 0f;
             base.ScaleLightCone();
         }
         else
         {
+            base.LaserLength = base.Vision.pointLightOuterRadius;
             this._spriteChanger.MakeInvisible();
-            // recalculate laserlength
-            this.AdaptLaserLengthToCycle();
-            base.ScaleLightCone();
+            this.AdaptLightToCycle();
             base.Update();
         }
     }
 
-    private void AdaptLaserLengthToCycle()
+    private void AdaptLightToCycle()
     {
         float timeLeft = this._sleepingIntervallTime - (Time.time - this._sleepingCycleStart);
-        Debug.Log("Time left in cycle: " + timeLeft.ToString());
 
         float normed = timeLeft / this._sleepingIntervallTime;
-        
-        Debug.Log("normed: " + normed.ToString());
 
         float shifted = normed - 0.5f;
 
-        Debug.Log("Shifted: " + shifted.ToString());
-
         float absolute = Mathf.Abs(shifted);
-
-        Debug.Log("Absolute: " + absolute.ToString());
 
         absolute = absolute < 0.1f ? 0.1f : absolute;
 
-        base.LaserLength = this._targetLaserLength / (1 + (absolute* this._targetLaserLength));
+        base.Vision.intensity = this._targetVisionIntensity / (1 + (absolute * this._targetVisionIntensity));
+        base.Vision.pointLightOuterRadius = this._targetVisionRadius / (1 + (absolute * this._targetVisionRadius));
     }
-
 }
  
