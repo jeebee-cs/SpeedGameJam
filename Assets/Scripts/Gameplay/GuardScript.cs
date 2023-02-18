@@ -7,25 +7,45 @@ using UnityEngine.UI;
 public class GuardScript : MonoBehaviour
 {
 
-    [SerializeField] private int _rotationSpeed, _degreeRange, _laserLength;
+    [SerializeField] private int _rotationSpeed, _degreeRange;
+
+    [SerializeField] private float _laserLength;
+    public float LaserLength
+    {
+        get { return this._laserLength; }
+        set { this._laserLength = value; }
+    }
+
     private float _startRotationValue;
+
+    private float _internalTime = 0f;
 
     [SerializeField] private MainCharacter _mainCharacter;
 
-    private void Start()
+    protected virtual void Start()
     {
         this._startRotationValue = this.transform.rotation.eulerAngles.z;
 
-        // TODO
-        // Scale light cone according to laser length
-
-        GlobalManager.StartRun();
+        this.ScaleLightCone();
     }
 
-    private void Update()
+    protected void ScaleLightCone()
     {
+        // Scale light cone according to laser length
+        Transform lightCone = this.transform.GetChild(0);
+        lightCone.localPosition = new Vector3(this._laserLength, 0, 0);
+        float parentScalingFactor = 1 / this.transform.localScale.x;
+        lightCone.localScale = new Vector3(this._laserLength * parentScalingFactor, 1, 1);
+    }
+
+    protected virtual void Update()
+    {
+        // need to use internal time so that sleeping guard works smoothly
+        this._internalTime += Time.deltaTime;
         this.LookAround();
     }
+
+    #region Looking Around
 
     private void LookAround()
     {
@@ -35,7 +55,7 @@ public class GuardScript : MonoBehaviour
 
     private void Rotate()
     {
-        float zValue = this._startRotationValue + Mathf.PingPong(Time.time * this._rotationSpeed, this._degreeRange) - (this._degreeRange / 2);
+        float zValue = this._startRotationValue + Mathf.PingPong(this._internalTime * this._rotationSpeed, this._degreeRange) - (this._degreeRange / 2);
         this.transform.localEulerAngles = new Vector3(0, 0, zValue);
     }
 
@@ -55,5 +75,6 @@ public class GuardScript : MonoBehaviour
         //Method to draw the ray in scene for debug purpose
         Debug.DrawRay(transform.position, this.transform.right * this._laserLength, Color.red);
     }
+    #endregion
 
 }

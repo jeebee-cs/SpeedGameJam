@@ -2,3 +2,8 @@
 - Player face movement direction
 
 - scale of game (size of guards, static objects ... )
+- timer (counting down or up?)
+
+- Patroling guard?
+- lerp laser & cone length
+- sleeping

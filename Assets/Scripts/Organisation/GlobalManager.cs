@@ -18,7 +18,7 @@ public static class GlobalManager
     }
 
     // PLAYER NAME
-    private static string s_playerName = "anon";
+    private static string s_playerName = "debug";
 
     public static string PlayerName
     {
@@ -30,47 +30,19 @@ public static class GlobalManager
 
     #region GameManagement
 
-    // GOLDSTACKS
-    private static int s_numberOfGoldstacks = 0;
-    private static int s_collectedGoldstacks = 0;
-
-    public static void InitializeGoldstack()
-    {
-        s_numberOfGoldstacks++;
-    }
-
-    public static void CollectGoldstack()
-    {
-        Debug.Log("Collected gold");
-        s_collectedGoldstacks++;
-    }
-
-
-    // GAME ENDED SUCCESSFULLY
+    // GAME SOLVED
     private static bool s_isGameSolved = false;
-
+    
     public static bool IsGameSolved
     {
-        get 
-        {
-            Debug.Log(s_numberOfGoldstacks);
-            Debug.Log(s_collectedGoldstacks);
-            if (s_numberOfGoldstacks > 0) return s_numberOfGoldstacks == s_collectedGoldstacks;
-            else return false;
-        }
+        get { return s_isGameSolved; }
     }
 
-    // SCORE CALCULATION
-    private static float s_startTime;
-
-    public static void StartRun()
+    // SETTING SCORE
+    public static void SolvedGame(float score)
     {
-        s_startTime = Time.time;
-    }
-
-    public static void SolvedGame()
-    {
-        s_score = Time.time - s_startTime;
+        s_score = score;
+        s_isGameSolved = true;
         LoadLeaderboard();
     }
 

@@ -214,5 +214,10 @@ public class MainCharacter : MonoBehaviour
       Destroy(other.gameObject);
     }
     if (_goldStacksCollected >= _goldStacks.Length) Debug.Log("All the gold was recolted");
+
+    if (other.tag == "Exit" && _goldStacksCollected >= _goldStacks.Length)
+    {
+      GlobalManager.SolvedGame(_restartTimer.TimeLeft() * -1);
+    }
   }
 }
