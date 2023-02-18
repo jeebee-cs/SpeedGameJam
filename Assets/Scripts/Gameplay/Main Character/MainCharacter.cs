@@ -2,20 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class MainCharacter : MonoBehaviour
 {
   MainCharacterInput _mainCharacterInput;
   Vector2 _moveDirection = new Vector2();
   bool _isMoving = false;
-  bool _canMove = true;
+  bool _isRestarting = false;
+  RealTimeTimer _restartTimer;
+  [SerializeField] float _motionMultiplier;
   [SerializeField] float _acceleration;
   [SerializeField] float _maxSpeed;
+  [SerializeField] float _holdTimeRestart;
+  [SerializeField] GameObject[] _goldStacks;
+  int _goldStacksCollected = 0;
   Rigidbody2D _rb2D;
 
   void Awake()
   {
     _rb2D = GetComponent<Rigidbody2D>();
+    _restartTimer = new RealTimeTimer(_holdTimeRestart);
   }
   void OnEnable()
   {
@@ -33,6 +40,10 @@ public class MainCharacter : MonoBehaviour
     _mainCharacterInput.Control.AccelerateMotion.performed += context => InputAccelerateMotion(context);
     _mainCharacterInput.Control.AccelerateMotion.canceled += context => InputAccelerateMotion(context);
     _mainCharacterInput.Control.AccelerateMotion.Enable();
+
+    _mainCharacterInput.Control.Reset.performed += context => InputReset(context);
+    _mainCharacterInput.Control.Reset.canceled += context => InputReset(context);
+    _mainCharacterInput.Control.Reset.Enable();
     #endregion
   }
   void OnDisable()
@@ -49,6 +60,10 @@ public class MainCharacter : MonoBehaviour
     _mainCharacterInput.Control.AccelerateMotion.performed -= context => InputAccelerateMotion(context);
     _mainCharacterInput.Control.AccelerateMotion.canceled -= context => InputAccelerateMotion(context);
     _mainCharacterInput.Control.AccelerateMotion.Disable();
+
+    _mainCharacterInput.Control.Reset.performed -= context => InputReset(context);
+    _mainCharacterInput.Control.Reset.canceled -= context => InputReset(context);
+    _mainCharacterInput.Control.Reset.Disable();
     #endregion
   }
 
@@ -89,8 +104,6 @@ public class MainCharacter : MonoBehaviour
   }
   void MovePerform()
   {
-    if (!_canMove) return;
-
     Vector2 speed = _rb2D.velocity + _moveDirection * _acceleration;
 
     if (_moveDirection.x == 0) speed.x = Deceleration(speed.x, _rb2D.velocity.x);
@@ -130,11 +143,11 @@ public class MainCharacter : MonoBehaviour
   }
   void SlowMotionStart()
   {
-    Time.timeScale *= .5f;
+    Time.timeScale *= (1/_motionMultiplier);
   }
   void SlowMotionCancel()
   {
-    Time.timeScale *= 2;
+    Time.timeScale *= _motionMultiplier;
   }
   void InputAccelerateMotion(InputAction.CallbackContext context)
   {
@@ -143,10 +156,63 @@ public class MainCharacter : MonoBehaviour
   }
   void AccelerateMotionStart()
   {
-    Time.timeScale *= 2;
+    Time.timeScale *= _motionMultiplier;
   }
   void AccelerateMotionCancel()
   {
-    Time.timeScale *= .5f;
+    Time.timeScale *= (1/_motionMultiplier);
+  }
+  void InputReset(InputAction.CallbackContext context)
+  {
+    if (context.performed)
+    {
+      if (!_isRestarting) StartCoroutine(InputRestartCoroutine());
+    }
+    _isRestarting = context.performed;
+  }
+  IEnumerator InputRestartCoroutine()
+  {
+    _isRestarting = true;
+
+    ResetStart();
+
+    while (_isRestarting)
+    {
+      ResetPerform();
+      yield return null;
+    }
+
+    ResetCancel();
+  }
+  void ResetStart()
+  {
+    _restartTimer.Reset();
+  }
+  void ResetPerform()
+  {
+    if (_restartTimer.IsOver()) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+  }
+  void ResetCancel()
+  {
+
+  }
+
+  public void Die()
+  {
+    StartCoroutine(DieCoroutine());
+  }
+  IEnumerator DieCoroutine()
+  {
+    yield return new WaitForSeconds(1f);
+    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+  }
+  private void OnTriggerEnter2D(Collider2D other)
+  {
+    if (other.tag == "GoldStack")
+    {
+      _goldStacksCollected++;
+      Destroy(other.gameObject);
+    }
+    if (_goldStacksCollected >= _goldStacks.Length) Debug.Log("All the gold was recolted");
   }
 }
