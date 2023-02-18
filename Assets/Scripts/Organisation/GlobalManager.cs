@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public static class GlobalManager
 {
 
-    #region Fields and Properties
+    #region Leaderboard Relevant
 
     // SCORE
     private static float s_score;
@@ -23,22 +23,61 @@ public static class GlobalManager
     public static string PlayerName
     {
         get { return s_playerName; }
-        set {s_playerName = value; }
+        set { s_playerName = value; }
     }
+
+    #endregion
+
+    #region GameManagement
+
+    // GOLDSTACKS
+    private static int s_numberOfGoldstacks = 0;
+    private static int s_collectedGoldstacks = 0;
+
+    public static void InitializeGoldstack()
+    {
+        s_numberOfGoldstacks++;
+    }
+
+    public static void CollectGoldstack()
+    {
+        Debug.Log("Collected gold");
+        s_collectedGoldstacks++;
+    }
+
 
     // GAME ENDED SUCCESSFULLY
     private static bool s_isGameSolved = false;
 
     public static bool IsGameSolved
     {
-        get { return s_isGameSolved; }
-        set { s_isGameSolved = value; }
+        get 
+        {
+            Debug.Log(s_numberOfGoldstacks);
+            Debug.Log(s_collectedGoldstacks);
+            if (s_numberOfGoldstacks > 0) return s_numberOfGoldstacks == s_collectedGoldstacks;
+            else return false;
+        }
+    }
+
+    // SCORE CALCULATION
+    private static float s_startTime;
+
+    public static void StartRun()
+    {
+        s_startTime = Time.time;
+    }
+
+    public static void SolvedGame()
+    {
+        s_score = Time.time - s_startTime;
+        LoadLeaderboard();
     }
 
     #endregion
 
     #region SceneManagement
-    
+
     public static void LoadMainMenu()
     {
         Load("MainMenu");

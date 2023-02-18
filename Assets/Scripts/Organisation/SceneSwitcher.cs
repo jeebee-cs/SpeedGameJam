@@ -15,5 +15,10 @@ public class SceneSwitcher : MonoBehaviour
         {
             GlobalManager.LoadLeaderboard();
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GlobalManager.LoadGame();
+        }
     }
 }

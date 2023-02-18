@@ -1,0 +1,4 @@
+- Right now player can still move after death
+- Player face movement direction
+
+- scale of game (size of guards, static objects ... )
