@@ -68,7 +68,7 @@ public class GuardScript : MonoBehaviour
         this.transform.localEulerAngles = new Vector3(0, 0, zValue);
     }
 
-    private void Detect()
+    protected void Detect()
     {
         Vector3[] directions = new Vector3[] { new Vector3(1, 0.15f, 0).normalized, new Vector3(1, 0, 0), new Vector3(1, -0.15f, 0).normalized };
 

@@ -215,7 +215,7 @@ MonoBehaviour:
   _vision: {fileID: 4010350052875479564}
   _layerToHit:
     serializedVersion: 2
-    m_Bits: 53
+    m_Bits: 49
   _laserLength: 5
   _mainCharacter: {fileID: 0}
 --- !u!1 &7837227817613571288

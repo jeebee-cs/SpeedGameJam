@@ -300,7 +300,7 @@ MonoBehaviour:
   _vision: {fileID: 6158722423367965841}
   _layerToHit:
     serializedVersion: 2
-    m_Bits: 53
+    m_Bits: 49
   _laserLength: 5
   _mainCharacter: {fileID: 0}
   _sleeping: 1

@@ -15,11 +15,10 @@ toom todo
 - implement patroling guard (as a test, see what others think)
 - for testing vision on player?
 
-- you can pass through the sleeping guards
 - you can collide with guards. (maybe idea for feature if we have more time: collision with walls make noise -> draw attention of guards)
 - test running normal, with shift, with space
 
-Added smooth navigation between scenes. Added target indicators. 
+Added patroling guard
 
 Idea for leaderboard:
 make wanted posters leader board main screen (rewarding for players who are on the leaderboard)
