@@ -7,7 +7,8 @@ public class LeaderBoardController : MonoBehaviour
 {
   private int ID = 11807;
   private int maxScores = 3;
-  public TMP_Text[] leaderboardTexts;
+  public TMP_Text[] leaderboardTextsScore;
+  public TMP_Text[] leaderboardTextsName;
 
   private void Start()
   {
@@ -60,15 +61,8 @@ public class LeaderBoardController : MonoBehaviour
 
           string scoreString =  minutes.ToString("00") + ":" + seconds.ToString("00") + ":" + miliseconds.ToString("00");
 
-          leaderboardTexts[i].text = (scores[i].rank + ".  " + scores[i].member_id + ": " + scoreString);
-        }
-
-        if (scores.Length < maxScores)
-        {
-          for (int i = scores.Length; i < maxScores; i++)
-          {
-            leaderboardTexts[i].text = (i + 1).ToString() + ". --- ";
-          }
+          leaderboardTextsScore[i].text = scoreString;
+          leaderboardTextsName[i].text = scores[i].member_id;
         }
 
       }
