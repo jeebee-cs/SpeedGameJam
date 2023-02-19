@@ -11,6 +11,7 @@ public class GuardScript : MonoBehaviour
     [SerializeField] private int _rotationSpeed, _degreeRange;
 
     [SerializeField] private Light2D _vision;
+    [SerializeField] private LayerMask _layerToHit;
     public Light2D Vision
     {
         get { return _vision; }
@@ -81,7 +82,7 @@ public class GuardScript : MonoBehaviour
     {
         direction = transform.rotation * direction;
 
-        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, direction, this._laserLength);
+        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, direction, this._laserLength, _layerToHit);
 
         if (hit.collider != null)
         {

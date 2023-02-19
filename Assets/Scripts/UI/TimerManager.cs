@@ -8,6 +8,7 @@ public class TimerManager : MonoBehaviour
   [SerializeField] TextMeshProUGUI _timerText;
   [SerializeField] MainCharacter _mainCharacter;
   RealTimeTimer _timer;
+  public RealTimeTimer timer { get => _timer; }
   void Start()
   {
     _timer = new RealTimeTimer(300, Time.realtimeSinceStartup);

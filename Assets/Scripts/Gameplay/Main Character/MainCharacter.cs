@@ -9,8 +9,7 @@ public class MainCharacter : MonoBehaviour
   MainCharacterInput _mainCharacterInput;
   Vector2 _moveDirection = new Vector2();
   bool _isMoving = false;
-  bool _isRestarting = false;
-  RealTimeTimer _restartTimer;
+  [SerializeField] TimerManager _timerManager;
   [SerializeField] float _motionMultiplier;
   [SerializeField] float _acceleration;
   [SerializeField] float _maxSpeed;
@@ -22,7 +21,6 @@ public class MainCharacter : MonoBehaviour
   void Awake()
   {
     _rb2D = GetComponent<Rigidbody2D>();
-    _restartTimer = new RealTimeTimer(_holdTimeRestart);
   }
   void OnEnable()
   {
@@ -143,7 +141,7 @@ public class MainCharacter : MonoBehaviour
   }
   void SlowMotionStart()
   {
-    Time.timeScale *= (1/_motionMultiplier);
+    Time.timeScale *= (1 / _motionMultiplier);
   }
   void SlowMotionCancel()
   {
@@ -160,41 +158,16 @@ public class MainCharacter : MonoBehaviour
   }
   void AccelerateMotionCancel()
   {
-    Time.timeScale *= (1/_motionMultiplier);
+    Time.timeScale *= (1 / _motionMultiplier);
   }
   void InputReset(InputAction.CallbackContext context)
   {
-    if (context.performed)
-    {
-      if (!_isRestarting) StartCoroutine(InputRestartCoroutine());
-    }
-    _isRestarting = context.performed;
+    if (context.performed) ResetStart();
   }
-  IEnumerator InputRestartCoroutine()
-  {
-    _isRestarting = true;
 
-    ResetStart();
-
-    while (_isRestarting)
-    {
-      ResetPerform();
-      yield return null;
-    }
-
-    ResetCancel();
-  }
   void ResetStart()
   {
-    _restartTimer.Reset();
-  }
-  void ResetPerform()
-  {
-    if (_restartTimer.IsOver()) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-  }
-  void ResetCancel()
-  {
-
+    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
   }
 
   public void Die()
@@ -213,11 +186,10 @@ public class MainCharacter : MonoBehaviour
       _goldStacksCollected++;
       Destroy(other.gameObject);
     }
-    if (_goldStacksCollected >= _goldStacks.Length) Debug.Log("All the gold was recolted");
 
     if (other.tag == "Exit" && _goldStacksCollected >= _goldStacks.Length)
     {
-      GlobalManager.SolvedGame(_restartTimer.TimeLeft() * -1);
+      GlobalManager.SolvedGame(_timerManager.timer.TimePass() * 100);
     }
   }
 }
