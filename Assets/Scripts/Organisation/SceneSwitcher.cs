@@ -1,24 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour
 {
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            GlobalManager.LoadMainMenu();
-        }
+        string activeScene = SceneManager.GetActiveScene().name;
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (activeScene == "Game")
         {
-            GlobalManager.LoadLeaderboard();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                GlobalManager.LoadMainMenu();
+            }
         }
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        else if (activeScene == "Leaderboard")
         {
-            GlobalManager.LoadGame();
+            if (Input.GetKeyDown(KeyCode.Backspace))
+            {
+                GlobalManager.LoadMainMenu();
+            }
+        }
+        else if (activeScene == "MainMenu")
+        {
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                GlobalManager.LoadLeaderboard();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                GlobalManager.LoadGame();
+            }
+        }
+        else
+        {
+            Debug.Log("Unknown active scene: " + activeScene);
         }
     }
 }

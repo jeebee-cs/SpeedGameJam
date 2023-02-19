@@ -167,7 +167,7 @@ public class MainCharacter : MonoBehaviour
 
   void ResetStart()
   {
-    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    GlobalManager.LoadGame();
   }
 
   public void Die()
@@ -177,7 +177,7 @@ public class MainCharacter : MonoBehaviour
   IEnumerator DieCoroutine()
   {
     yield return new WaitForSeconds(1f);
-    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    GlobalManager.LoadGame();
   }
   private void OnTriggerEnter2D(Collider2D other)
   {
@@ -187,9 +187,14 @@ public class MainCharacter : MonoBehaviour
       Destroy(other.gameObject);
     }
 
-    if (other.tag == "Exit" && _goldStacksCollected >= _goldStacks.Length)
+    if ( _goldStacksCollected >= _goldStacks.Length)
     {
-      GlobalManager.SolvedGame(_timerManager.timer.TimePass() * 100);
+      GlobalManager.IsAllGoldCollected = true;
+
+      if (other.tag == "Exit")
+        {
+          GlobalManager.SolvedGame(_timerManager.timer.TimePass() * 100);
+        }
     }
   }
 }

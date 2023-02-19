@@ -16,7 +16,6 @@ public class SpriteChanger
 
     public SpriteChanger(SpriteRenderer spriteRenderer)
     {
-        Debug.Log(spriteRenderer);
         this._spriteRenderer = spriteRenderer;
         this._currentColor = spriteRenderer.color;
         this._startColor = this._currentColor;

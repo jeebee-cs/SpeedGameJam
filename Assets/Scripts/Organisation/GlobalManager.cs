@@ -30,12 +30,21 @@ public static class GlobalManager
 
     #region GameManagement
 
+    // GOLD
+    private static bool s_isAllGoldCollected = false;
+    public static bool IsAllGoldCollected
+    {
+        get { return s_isAllGoldCollected; }
+        set { s_isAllGoldCollected=value; }
+    }
+
     // GAME SOLVED
     private static bool s_isGameSolved = false;
     
     public static bool IsGameSolved
     {
         get { return s_isGameSolved; }
+        set { s_isGameSolved=value; }
     }
 
     // SETTING SCORE
@@ -52,6 +61,8 @@ public static class GlobalManager
 
     public static void LoadMainMenu()
     {
+        s_isAllGoldCollected = false;
+        s_isGameSolved = false;
         Load("MainMenu");
     }
 
@@ -62,6 +73,8 @@ public static class GlobalManager
 
     public static void LoadGame()
     {
+        s_isAllGoldCollected = false;
+        s_isGameSolved = false;
         Load("Game");
     }
 
