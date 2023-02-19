@@ -176,7 +176,7 @@ public class MainCharacter : MonoBehaviour
   }
   IEnumerator DieCoroutine()
   {
-    yield return new WaitForSeconds(1f);
+    yield return new WaitForSeconds(0.01f);
     GlobalManager.LoadGame();
   }
   private void OnTriggerEnter2D(Collider2D other)

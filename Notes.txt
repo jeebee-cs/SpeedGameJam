@@ -1,25 +1,9 @@
-- Right now player can still move after death
 - Player face movement direction
 
-- scale of game (size of guards, static objects ... )
-- timer (counting down or up?)
-
-- Patroling guard?
-- lerp laser & cone length
-- sleeping
-
-player can get stuck right now (qa testing)
-
-toom todo
-- improve main menu
-- implement patroling guard (as a test, see what others think)
-- for testing vision on player?
-
-- you can collide with guards. (maybe idea for feature if we have more time: collision with walls make noise -> draw attention of guards)
+- player can get stuck right now (qa testing)
 - test running normal, with shift, with space
 
-Added patroling guard
-
-Idea for leaderboard:
-make wanted posters leader board main screen (rewarding for players who are on the leaderboard)
-in leaderboard screen show player result and neighbouring results (may feel bad for the player to play but not receive a ranking)
+TODO
+main menu
+leaderboard
+collision with guards

@@ -19,7 +19,9 @@ public class SleepingGuard : GuardScript
     protected override void Start()
     {
         this._targetVisionIntensity = base.Vision.intensity;
+        base.Vision.pointLightOuterRadius = base.LaserLength;
         this._targetVisionRadius = base.Vision.pointLightOuterRadius;
+
         base.LaserLength = 0f;
 
         this._sleepingCycleStart = Time.time; // is that correct? How is the sleeping cycle gonna change when time is slower/faster?
