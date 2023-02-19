@@ -9,30 +9,30 @@ public class LeaderBoardController : MonoBehaviour
   private int maxScores = 3;
   public TMP_Text[] leaderboardTextsScore;
   public TMP_Text[] leaderboardTextsName;
+  public TMP_Text yourRanking;
 
-  private void Start()
+  void Start()
   {
     LootLockerSDKManager.StartGuestSession((response) =>
     {
-      if (response.success)
-      {
-        if (GlobalManager.IsGameSolved)
-        {
-          SubmitScore();
-        }
-
-        ShowScores();
-      }
-      else
+      if (!response.success)
       {
         Debug.Log("Starting LootLocker Session failed.");
+
+
       }
+        else
+        {
+            if (!GlobalManager.IsGameSolved)
+            {
+                this.ShowScores();
+            }
+        }
     });
   }
 
-  private void SubmitScore()
+  public void SubmitScore()
   {
-    Debug.Log(GlobalManager.Score);
     LootLockerSDKManager.SubmitScore(GlobalManager.PlayerName, (int)(GlobalManager.Score), ID, (response) =>
     {
       if (!response.success)
@@ -42,6 +42,23 @@ public class LeaderBoardController : MonoBehaviour
 
     });
   }
+
+  private void GetRank()
+    {
+        LootLockerSDKManager.GetMemberRank(ID, GlobalManager.PlayerName, (response) =>
+        {
+            if (response.statusCode == 200)
+            {
+                Debug.Log(response.text);
+
+                this.yourRanking.text = "YOUR RANK: " + response.rank.ToString();
+            }
+            else
+            {
+                Debug.Log("failed: " + response.Error);
+            }
+        });
+    }
 
   public void ShowScores()
   {
@@ -65,11 +82,16 @@ public class LeaderBoardController : MonoBehaviour
           leaderboardTextsName[i].text = scores[i].member_id;
         }
 
-      }
-      else
+        if (GlobalManager.IsGameSolved)
+            {
+                this.GetRank();
+            }
+        }
+        else
       {
         Debug.Log("Failed to show leaderboard.");
       }
     });
   }
+
 }

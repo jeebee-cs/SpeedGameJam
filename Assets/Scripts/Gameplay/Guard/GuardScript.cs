@@ -97,4 +97,13 @@ public class GuardScript : MonoBehaviour
 
     #endregion
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Player")
+        {
+            this.transform.right = this._mainCharacter.transform.position - this.transform.position;
+            this._mainCharacter.Die();
+        }
+    }
+
 }

@@ -1,9 +1,9 @@
 - Player face movement direction
-
 - player can get stuck right now (qa testing)
+
 - test running normal, with shift, with space
+	-> make sure time difference is at excpected
 
 TODO
-main menu
-leaderboard
-collision with guards
+
+light bug with barells topright
