@@ -35,7 +35,7 @@ public class GuardScript : MonoBehaviour
     protected virtual void Start()
     {
         this._startRotationValue = this.transform.rotation.eulerAngles.z;
-        this._vision.pointLightOuterRadius = this._laserLength;
+        this._vision.pointLightOuterRadius = this._laserLength * 1.1f;
     }
 
     protected void ScaleLightCone()

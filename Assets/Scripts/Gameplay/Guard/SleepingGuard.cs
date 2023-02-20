@@ -49,7 +49,7 @@ public class SleepingGuard : GuardScript
         }
         else
         {
-            base.LaserLength = base.Vision.pointLightOuterRadius;
+            base.LaserLength = base.Vision.pointLightOuterRadius * 0.95f;
             this._spriteChanger.MakeInvisible();
             this.AdaptLightToCycle();
             base.Update();
@@ -61,6 +61,11 @@ public class SleepingGuard : GuardScript
         float timeLeft = this._sleepingIntervallTime - (Time.time - this._sleepingCycleStart);
 
         float normed = timeLeft / this._sleepingIntervallTime;
+
+        if (normed > 0.9)
+        {
+            base.LaserLength = 0f;
+        }
 
         float shifted = normed - 0.5f;
 
