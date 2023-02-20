@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 6226909681652908840}
   - component: {fileID: 8740900774410184361}
   - component: {fileID: 1145230939493341794}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: SleepingGuard
   m_TagString: StaticObject
   m_Icon: {fileID: 0}
@@ -301,7 +301,7 @@ MonoBehaviour:
   _vision: {fileID: 6158722423367965841}
   _layerToHit:
     serializedVersion: 2
-    m_Bits: 49
+    m_Bits: 33
   _laserLength: 5
   _mainCharacter: {fileID: 0}
   _sleeping: 1

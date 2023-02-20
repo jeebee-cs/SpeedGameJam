@@ -99,6 +99,7 @@ public class GuardScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("a");
         if (other.tag == "Player")
         {
             this.transform.right = this._mainCharacter.transform.position - this.transform.position;

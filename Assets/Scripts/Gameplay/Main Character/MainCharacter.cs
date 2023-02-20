@@ -15,6 +15,13 @@ public class MainCharacter : MonoBehaviour
   [SerializeField] float _maxSpeed;
   [SerializeField] float _holdTimeRestart;
   [SerializeField] GameObject[] _goldStacks;
+  [SerializeField] GameObject _imageBlack;
+  [SerializeField] AudioSource _audioSourceSound;
+  [SerializeField] AudioSource _audioSourceWalking;
+  [SerializeField] AudioSource _audioSourceGun;
+  [SerializeField] AudioClip _goldSound;
+  [SerializeField] AudioClip _bumpSound;
+  bool _dead = false;
   int _goldStacksCollected = 0;
   Rigidbody2D _rb2D;
 
@@ -99,6 +106,7 @@ public class MainCharacter : MonoBehaviour
   void MoveStart()
   {
     //MoveVFX(true);
+    _audioSourceWalking.Play();
   }
   void MovePerform()
   {
@@ -115,6 +123,7 @@ public class MainCharacter : MonoBehaviour
   void MoveCancel()
   {
     //MoveVFX(false);
+    _audioSourceWalking.Stop();
   }
   void Friction()
   {
@@ -172,11 +181,16 @@ public class MainCharacter : MonoBehaviour
 
   public void Die()
   {
+    if (_dead) return;
+    _dead = true;
+    _audioSourceGun.Play();
     StartCoroutine(DieCoroutine());
   }
   IEnumerator DieCoroutine()
   {
-    yield return new WaitForSeconds(0.01f);
+    _mainCharacterInput.Disable();
+    _imageBlack.SetActive(true);
+    yield return new WaitForSeconds(0.5f);
     GlobalManager.LoadGame();
   }
   private void OnTriggerEnter2D(Collider2D other)
@@ -184,17 +198,25 @@ public class MainCharacter : MonoBehaviour
     if (other.tag == "GoldStack")
     {
       _goldStacksCollected++;
+      _audioSourceSound.clip = _goldSound;
+      _audioSourceSound.Play();
       Destroy(other.gameObject);
     }
 
-    if ( _goldStacksCollected >= _goldStacks.Length)
+    if (_goldStacksCollected >= _goldStacks.Length)
     {
       GlobalManager.IsAllGoldCollected = true;
 
       if (other.tag == "Exit")
-        {
-          GlobalManager.SolvedGame(_timerManager.timer.TimePass() * 100);
-        }
+      {
+        GlobalManager.SolvedGame(_timerManager.timer.TimePass() * 100);
+      }
     }
+  }
+
+  private void OnCollisionEnter(Collision other)
+  {
+    _audioSourceSound.clip = _bumpSound;
+    _audioSourceSound.Play();
   }
 }

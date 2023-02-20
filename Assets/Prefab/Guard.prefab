@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 6226909681652908840}
   - component: {fileID: 6226909681652908846}
   - component: {fileID: -3381502019034139849}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Guard
   m_TagString: StaticObject
   m_Icon: {fileID: 0}
@@ -216,7 +216,7 @@ MonoBehaviour:
   _vision: {fileID: 4010350052875479564}
   _layerToHit:
     serializedVersion: 2
-    m_Bits: 49
+    m_Bits: 33
   _laserLength: 5
   _mainCharacter: {fileID: 0}
 --- !u!58 &-3381502019034139849
