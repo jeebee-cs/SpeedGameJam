@@ -8,7 +8,9 @@ public class SceneSwitcher : MonoBehaviour
   MusicManager _musicManager;
   [SerializeField] AudioClip _gameMusic;
   [SerializeField] AudioClip _menuMusic;
-  private void Awake() {
+  [SerializeField] GameObject _banditName;
+  private void Awake()
+  {
     _musicManager = GameObject.Find("Music").GetComponent<MusicManager>();
   }
   void Update()
@@ -25,10 +27,23 @@ public class SceneSwitcher : MonoBehaviour
     }
     else if (activeScene == "Leaderboard")
     {
-        _musicManager.ChangeMusic(_menuMusic);
+      _musicManager.ChangeMusic(_menuMusic);
       if (Input.GetKeyDown(KeyCode.Backspace))
       {
-        GlobalManager.LoadMainMenu();
+        Debug.Log(_banditName.activeInHierarchy);
+        if (_banditName != null)
+        {
+          if (!_banditName.activeInHierarchy)
+          {
+            _musicManager.ChangeMusic(_menuMusic);
+            GlobalManager.LoadMainMenu();
+          }
+        }
+        else
+        {
+          _musicManager.ChangeMusic(_menuMusic);
+          GlobalManager.LoadMainMenu();
+        }
       }
     }
     else if (activeScene == "MainMenu")
