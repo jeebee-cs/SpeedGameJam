@@ -31,4 +31,10 @@ public class MusicManager : MonoBehaviour
       _instance = this;
     }
   }
+  public void ChangeMusic(AudioClip otherMusic)
+  {
+    _music = otherMusic;
+    _audioSource.clip = _music;
+    _audioSource.Play();
+  }
 }

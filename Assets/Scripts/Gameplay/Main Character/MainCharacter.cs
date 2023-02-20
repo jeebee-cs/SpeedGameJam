@@ -15,13 +15,13 @@ public class MainCharacter : MonoBehaviour
   [SerializeField] float _maxSpeed;
   [SerializeField] float _holdTimeRestart;
   [SerializeField] GameObject[] _goldStacks;
-    private Vector3 _lastCheckpoint;
   [SerializeField] GameObject _imageBlack;
   [SerializeField] AudioSource _audioSourceSound;
   [SerializeField] AudioSource _audioSourceWalking;
   [SerializeField] AudioSource _audioSourceGun;
   [SerializeField] AudioClip _goldSound;
   [SerializeField] AudioClip _bumpSound;
+  [SerializeField] AudioClip _menuMusic;
   bool _dead = false;
   int _goldStacksCollected = 0;
   Rigidbody2D _rb2D;
@@ -29,7 +29,6 @@ public class MainCharacter : MonoBehaviour
   void Awake()
   {
     _rb2D = GetComponent<Rigidbody2D>();
-        this._lastCheckpoint = this.transform.position;
   }
   void OnEnable()
   {
@@ -120,6 +119,9 @@ public class MainCharacter : MonoBehaviour
     speed.x = Matho.Clamp(speed.x, 0, _maxSpeed * Mathf.Sign(speed.x));
     speed.y = Matho.Clamp(speed.y, 0, _maxSpeed * Mathf.Sign(speed.y));
 
+    float zValue = Vector2.SignedAngle(Vector2.down, speed);
+    transform.localEulerAngles = new Vector3(0, 0, zValue);
+
     _rb2D.velocity = speed;
   }
   void MoveCancel()
@@ -190,31 +192,16 @@ public class MainCharacter : MonoBehaviour
   }
   IEnumerator DieCoroutine()
   {
-        _mainCharacterInput.Disable();
-        _imageBlack.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
-
-        // for checkpoint testing
-        bool checkpointsEnabled = false;
-
-        if (checkpointsEnabled)
-        {
-            this.transform.position = this._lastCheckpoint;
-            _imageBlack.SetActive(false);
-            _dead = false;
-            _mainCharacterInput.Enable();
-        }
-        else
-        {
-            GlobalManager.LoadGame();
-        }
-    }
+    _mainCharacterInput.Disable();
+    _imageBlack.SetActive(true);
+    yield return new WaitForSeconds(0.5f);
+    GlobalManager.LoadGame();
+  }
   private void OnTriggerEnter2D(Collider2D other)
   {
     if (other.tag == "GoldStack")
     {
       _goldStacksCollected++;
-      this._lastCheckpoint = other.transform.position;
       _audioSourceSound.clip = _goldSound;
       _audioSourceSound.Play();
       Destroy(other.gameObject);
@@ -226,6 +213,7 @@ public class MainCharacter : MonoBehaviour
 
       if (other.tag == "Exit")
       {
+        GameObject.Find("Music").GetComponent<MusicManager>().ChangeMusic(_menuMusic);
         GlobalManager.SolvedGame(_timerManager.timer.TimePass() * 100);
       }
     }
