@@ -15,6 +15,7 @@ public class MainCharacter : MonoBehaviour
   [SerializeField] float _maxSpeed;
   [SerializeField] float _holdTimeRestart;
   [SerializeField] GameObject[] _goldStacks;
+    private Vector3 _lastCheckpoint;
   [SerializeField] GameObject _imageBlack;
   [SerializeField] AudioSource _audioSourceSound;
   [SerializeField] AudioSource _audioSourceWalking;
@@ -28,6 +29,7 @@ public class MainCharacter : MonoBehaviour
   void Awake()
   {
     _rb2D = GetComponent<Rigidbody2D>();
+        this._lastCheckpoint = this.transform.position;
   }
   void OnEnable()
   {
@@ -188,16 +190,31 @@ public class MainCharacter : MonoBehaviour
   }
   IEnumerator DieCoroutine()
   {
-    _mainCharacterInput.Disable();
-    _imageBlack.SetActive(true);
-    yield return new WaitForSeconds(0.5f);
-    GlobalManager.LoadGame();
-  }
+        _mainCharacterInput.Disable();
+        _imageBlack.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+
+        // for checkpoint testing
+        bool checkpointsEnabled = false;
+
+        if (checkpointsEnabled)
+        {
+            this.transform.position = this._lastCheckpoint;
+            _imageBlack.SetActive(false);
+            _dead = false;
+            _mainCharacterInput.Enable();
+        }
+        else
+        {
+            GlobalManager.LoadGame();
+        }
+    }
   private void OnTriggerEnter2D(Collider2D other)
   {
     if (other.tag == "GoldStack")
     {
       _goldStacksCollected++;
+      this._lastCheckpoint = other.transform.position;
       _audioSourceSound.clip = _goldSound;
       _audioSourceSound.Play();
       Destroy(other.gameObject);

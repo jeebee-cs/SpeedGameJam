@@ -26,8 +26,13 @@ public class Indicator : MonoBehaviour
 
         if (hit.collider != null)
         {
+            this._indicator.SetActive(true);
             // set indicator to collision between ray and camera box
             this._indicator.transform.position = hit.point;
+        }
+        else
+        {
+            this._indicator.SetActive(false);
         }
 
         Debug.DrawRay(transform.position, direction, Color.red);
